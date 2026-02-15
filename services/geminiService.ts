@@ -29,7 +29,7 @@ const difficultyMap = {
 export const generateChemistryQuestions = async (topic: 'Kc' | 'pH', difficulty: Difficulty): Promise<Question[]> => {
   try {
     const ai = getAIInstance();
-    const prompt = `أنت معلم كيمياء للمرحلة الثانوية. قم بتوليد 5 أسئلة اختيار من متعدد باللغة العربية حول ${topic === 'Kc' ? 'ثابت الاتزان Kc' : 'الأس الهيدروجيني pH'}.
+    const prompt = `أنت معلم كيمياء للمرحلة الثانوية. قم بتوليد 20 سؤال اختيار من متعدد باللغة العربية حول ${topic === 'Kc' ? 'ثابت الاتزان Kc' : 'الأس الهيدروجيني pH'}.
     المستوى المطلوب: ${difficultyMap[difficulty]}.
     
     شروط هامة:
