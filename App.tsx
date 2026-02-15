@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from './components/Layout.tsx';
 import KcCalculator from './components/KcCalculator.tsx';
@@ -106,7 +105,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout activeView={view} setView={setView}>
+    <Layout 
+      activeView={view} 
+      setView={setView} 
+    >
       {renderView()}
     </Layout>
   );

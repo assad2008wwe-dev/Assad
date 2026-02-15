@@ -1,13 +1,6 @@
-
 import React from 'react';
 import { Home, Calculator, Droplets, BookOpen, BrainCircuit } from 'lucide-react';
-import { AppView } from '../types.ts';
-
-interface LayoutProps {
-  children: React.ReactNode;
-  activeView: AppView;
-  setView: (view: AppView) => void;
-}
+import { AppView, LayoutProps } from '../types.ts';
 
 const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
   const navItems = [
@@ -49,8 +42,10 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
           })}
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-white/20 text-xs text-center opacity-60">
-          &copy; 2024 كيمياء بلس التعليمي
+        <div className="mt-auto space-y-4">
+          <div className="pt-4 border-t border-white/20 text-xs text-center opacity-60">
+            &copy; 2024 كيمياء بلس التعليمي
+          </div>
         </div>
       </aside>
 
@@ -60,20 +55,22 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
           <BookOpen size={20} />
           <h1 className="text-lg font-bold">كيمياء بلس</h1>
         </div>
-        <div className="flex gap-4 overflow-x-auto">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setView(item.id as AppView)}
-                className={`p-2 rounded-lg shrink-0 ${activeView === item.id ? 'bg-white/20' : ''}`}
-                title={item.label}
-              >
-                <Icon size={20} />
-              </button>
-            );
-          })}
+        <div className="flex items-center gap-2">
+          <div className="flex gap-2 overflow-x-auto">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setView(item.id as AppView)}
+                  className={`p-2 rounded-lg shrink-0 ${activeView === item.id ? 'bg-white/20' : ''}`}
+                  title={item.label}
+                >
+                  <Icon size={20} />
+                </button>
+              );
+            })}
+          </div>
         </div>
       </header>
 

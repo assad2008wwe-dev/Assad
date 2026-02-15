@@ -1,3 +1,4 @@
+import React from 'react';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -25,3 +26,9 @@ export interface PhCalculationResult {
 }
 
 export type AppView = 'home' | 'kc-calc' | 'ph-calc' | 'quiz' | 'gemini-assistant';
+
+export interface LayoutProps {
+  children: React.ReactNode;
+  activeView: AppView;
+  setView: (view: AppView) => void;
+}
