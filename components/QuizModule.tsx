@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { BookOpen, CheckCircle2, XCircle, ChevronRight, Loader2, Award, Zap, ShieldCheck, Sparkles } from 'lucide-react';
-import { generateChemistryQuestions } from '../services/geminiService';
-import { Question, Difficulty } from '../types';
+import { generateChemistryQuestions } from '../services/geminiService.ts';
+import { Question, Difficulty } from '../types.ts';
 
 const QuizModule: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -19,14 +19,20 @@ const QuizModule: React.FC = () => {
     if (!activeTopic) return;
     setLoading(true);
     setStep('quiz');
-    const qs = await generateChemistryQuestions(activeTopic, difficulty);
-    setQuestions(qs);
-    setCurrentIndex(0);
-    setScore(0);
-    setSelectedOption(null);
-    setIsFinished(false);
-    setLoading(false);
-    setShowExplanation(false);
+    try {
+      const qs = await generateChemistryQuestions(activeTopic, difficulty);
+      setQuestions(qs);
+      setCurrentIndex(0);
+      setScore(0);
+      setSelectedOption(null);
+      setIsFinished(false);
+      setShowExplanation(false);
+    } catch (error) {
+      console.error(error);
+      setStep('topic');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOptionSelect = (index: number) => {
@@ -130,7 +136,7 @@ const QuizModule: React.FC = () => {
   }
 
   if (isFinished) {
-    const percentage = Math.round((score / questions.length) * 100);
+    const percentage = Math.round((score / (questions.length || 1)) * 100);
     return (
       <div className="bg-white rounded-[50px] shadow-2xl p-12 text-center border-t-8 border-emerald-500 animate-fadeIn">
         <div className={`w-32 h-32 rounded-[40px] flex items-center justify-center mx-auto mb-8 ${percentage >= 60 ? 'bg-emerald-100 text-emerald-600 shadow-emerald-100' : 'bg-red-100 text-red-600 shadow-red-100'} shadow-2xl animate-bounce`}>
@@ -161,7 +167,9 @@ const QuizModule: React.FC = () => {
   }
 
   const currentQ = questions[currentIndex];
-  const progressPercent = ((currentIndex + 1) / questions.length) * 100;
+  const progressPercent = ((currentIndex + 1) / (questions.length || 1)) * 100;
+
+  if (!currentQ) return null;
 
   return (
     <div className="bg-white rounded-[50px] shadow-2xl p-8 md:p-14 border border-gray-100 relative overflow-hidden animate-fadeIn">
@@ -215,7 +223,7 @@ const QuizModule: React.FC = () => {
               className={`p-7 rounded-[35px] text-right border-2 font-bold transition-all flex items-center justify-between group text-xl ${btnStyles}`}
             >
               <span>{option}</span>
-              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
+              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all shrink-0 ${
                 selectedOption === index ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-200'
               }`}>
                 {selectedOption !== null && index === currentQ.correctAnswer && <CheckCircle2 size={20} />}

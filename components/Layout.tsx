@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Home, Calculator, Droplets, BookOpen, BrainCircuit } from 'lucide-react';
-import { AppView } from '../types';
+import { AppView } from '../types.ts';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -67,7 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
               <button
                 key={item.id}
                 onClick={() => setView(item.id as AppView)}
-                className={`p-2 rounded-lg ${activeView === item.id ? 'bg-white/20' : ''}`}
+                className={`p-2 rounded-lg shrink-0 ${activeView === item.id ? 'bg-white/20' : ''}`}
                 title={item.label}
               >
                 <Icon size={20} />
