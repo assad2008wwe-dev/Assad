@@ -1,8 +1,9 @@
+
 import React from 'react';
-import { Home, Calculator, Droplets, BookOpen, BrainCircuit } from 'lucide-react';
+import { Home, Calculator, Droplets, BookOpen, BrainCircuit, Settings } from 'lucide-react';
 import { AppView, LayoutProps } from '../types.ts';
 
-const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
+const Layout: React.FC<LayoutProps> = ({ children, activeView, setView, onOpenSettings }) => {
   const navItems = [
     { id: 'home', label: 'الرئيسية', icon: Home },
     { id: 'kc-calc', label: 'حاسبة Kc', icon: Calculator },
@@ -43,6 +44,14 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
         </nav>
 
         <div className="mt-auto space-y-4">
+          <button 
+            onClick={onOpenSettings}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 opacity-80 transition-all text-sm"
+          >
+            <Settings size={18} />
+            <span>إعدادات API</span>
+          </button>
+          
           <div className="pt-4 border-t border-white/20 text-xs text-center opacity-60">
             &copy; 2024 كيمياء بلس التعليمي
           </div>
@@ -56,6 +65,12 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, setView }) => {
           <h1 className="text-lg font-bold">كيمياء بلس</h1>
         </div>
         <div className="flex items-center gap-2">
+           <button 
+            onClick={onOpenSettings}
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+          >
+            <Settings size={20} />
+          </button>
           <div className="flex gap-2 overflow-x-auto">
             {navItems.map((item) => {
               const Icon = item.icon;

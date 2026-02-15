@@ -1,14 +1,33 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout.tsx';
 import KcCalculator from './components/KcCalculator.tsx';
 import PhCalculator from './components/PhCalculator.tsx';
 import QuizModule from './components/QuizModule.tsx';
 import Assistant from './components/Assistant.tsx';
+import ApiKeyModal from './components/ApiKeyModal.tsx';
+import { getStoredApiKey } from './services/geminiService.ts';
 import { AppView } from './types.ts';
 import { Beaker, Thermometer, Zap, GraduationCap, ArrowLeft, PlayCircle } from 'lucide-react';
 
 const App: React.FC = () => {
   const [view, setView] = useState<AppView>('home');
+  const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
+  const [hasKey, setHasKey] = useState(false);
+
+  useEffect(() => {
+    // التحقق من وجود المفتاح عند التحميل
+    const key = getStoredApiKey();
+    if (key) {
+      setHasKey(true);
+    } else {
+      setIsKeyModalOpen(true);
+    }
+  }, []);
+
+  const handleKeySave = () => {
+    setHasKey(true);
+  };
 
   const renderView = () => {
     switch (view) {
@@ -30,7 +49,10 @@ const App: React.FC = () => {
               
               <div className="pt-6">
                 <button 
-                  onClick={() => setView('quiz')}
+                  onClick={() => {
+                    if (!hasKey) setIsKeyModalOpen(true);
+                    else setView('quiz');
+                  }}
                   className="group relative px-16 py-8 bg-emerald-600 text-white rounded-[40px] font-black text-3xl shadow-2xl hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95 flex items-center gap-4 mx-auto"
                 >
                   <PlayCircle size={40} />
@@ -49,7 +71,10 @@ const App: React.FC = () => {
               ].map((item) => (
                 <div 
                   key={item.id}
-                  onClick={() => setView(item.id as AppView)}
+                  onClick={() => {
+                    if (item.id === 'gemini-assistant' && !hasKey) setIsKeyModalOpen(true);
+                    else setView(item.id as AppView);
+                  }}
                   className={`group relative p-8 bg-white rounded-[45px] shadow-sm hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-${item.color}-200 flex flex-col items-center text-center`}
                 >
                   <div className={`w-20 h-20 bg-${item.color}-50 text-${item.color}-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner`}>
@@ -108,7 +133,14 @@ const App: React.FC = () => {
     <Layout 
       activeView={view} 
       setView={setView} 
+      onOpenSettings={() => setIsKeyModalOpen(true)}
     >
+      <ApiKeyModal 
+        isOpen={isKeyModalOpen} 
+        onClose={() => setIsKeyModalOpen(false)} 
+        onSave={handleKeySave}
+        canClose={hasKey}
+      />
       {renderView()}
     </Layout>
   );

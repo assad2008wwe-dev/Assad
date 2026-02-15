@@ -1,9 +1,23 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { Question, Difficulty } from "../types.ts";
 
+// دالة للحصول على المفتاح من التخزين المحلي أو البيئة
+export const getStoredApiKey = (): string => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('gemini_api_key') || "";
+  }
+  // @ts-ignore
+  return (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+};
+
 // دالة مساعدة للحصول على نسخة من AI بأمان
 const getAIInstance = () => {
-  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getStoredApiKey();
+  if (!apiKey) {
+    throw new Error("API Key is missing. Please add it in settings.");
+  }
+  return new GoogleGenAI({ apiKey });
 };
 
 const difficultyMap = {
@@ -71,6 +85,6 @@ export const getChemistryExplanation = async (userQuery: string): Promise<string
     return response.text || "عذراً، لم أتمكن من الحصول على إجابة.";
   } catch (error) {
     console.error("Error getting explanation:", error);
-    return "حدث خطأ في الاتصال.";
+    return "حدث خطأ. يرجى التأكد من صحة مفتاح API في الإعدادات.";
   }
 };

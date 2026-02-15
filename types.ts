@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -31,4 +32,5 @@ export interface LayoutProps {
   children: React.ReactNode;
   activeView: AppView;
   setView: (view: AppView) => void;
+  onOpenSettings: () => void;
 }
